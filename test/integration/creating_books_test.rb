@@ -1,16 +1,18 @@
 require 'test_helper'
 
 class CreatingBooksTest < ActionDispatch::IntegrationTest
+  def setup
+      @programming = Genre.create!(name: 'Programming')
+      @book = @programming.books.create!(
+        title: 'Pragmatic Programmer',
+        rating: 5,
+        author: 'Dave Thomas',
+        genre_id: 1,
+        review: 'Excellent book for any programmer.',
+        amazon_id: '13123')
+  end
   test 'creates new books with valid data' do
-      post '/books', params: { book: {
-          title: 'Pragmatic Programmer',
-          rating: 5,
-          author: 'Dave Thomas',
-          genre_id: 1,
-          review: 'Excellent book for any programmer.',
-          amazon_id: '13123'
-      } }.to_json,
-      headers: {
+      post '/books', params: { book: @book }.to_json, headers: {
           'Accept' => 'application/json',
           'Content-Type' => 'application/json'
       }
